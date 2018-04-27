@@ -2,5 +2,7 @@
   "name": "workshop-ionic-tdd-pwa",
   "app_id": "",
   "type": "ionic-angular",
-  "integrations": {}
+  "integrations": {
+    "cordova": {}
+  }
 }
