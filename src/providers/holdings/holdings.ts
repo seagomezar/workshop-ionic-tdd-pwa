@@ -18,6 +18,7 @@ export interface Holding {
 export class HoldingsProvider {
 
   holdings: Holding[] = [];
+  pricesUnavailable: boolean = false;
 
   constructor(public http: HttpClient, private storage: Storage) {
     console.log('Hello HoldingsProvider Provider');
@@ -47,6 +48,34 @@ export class HoldingsProvider {
     return this.http.get('https://api.cryptonator.com/api/ticker/' + holding.crypto + '-' + holding.currency).pipe(
       timeoutWith(5000, Observable.throw(new Error('Failed to verify holding.')))
     );
+  }
+
+  fetchPrices(refresher?): void {
+    this.pricesUnavailable = false;
+    let requests = [];
+    for (let holding of this.holdings) {
+      let request = this.http.get('https://api.cryptonator.com/api/ticker/' + holding.crypto + '-' + holding.currency);
+      requests.push(request);
+    }
+    // https://www.learnrxjs.io/operators/combination/forkjoin.html
+    forkJoin(requests).pipe(timeoutWith(5000, Observable.throw(new Error('Failed to fetch prices.')))).subscribe(results => {
+      results.forEach((result: any, index) => {
+        this.holdings[index].value = result.ticker.price;
+      });
+
+      if (typeof (refresher) !== 'undefined') {
+        refresher.complete();
+      }
+
+      this.saveHoldings();
+
+    }, err => {
+      this.pricesUnavailable = true;
+      if (typeof (refresher) !== 'undefined') {
+        refresher.complete();
+      }
+    });
+
   }
 
 }
