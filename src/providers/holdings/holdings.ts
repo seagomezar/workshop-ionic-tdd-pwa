@@ -1,6 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
+import { Observable } from 'rxjs/Observable';
+import { forkJoin } from 'rxjs/Observable/forkJoin';
+import { timeoutWith } from 'rxjs/operators';
+import 'rxjs/add/observable/throw';
 
 
 export interface Holding {
@@ -37,6 +41,12 @@ export class HoldingsProvider {
         this.holdings = holdings;
       }
     });
+  }
+
+  verifyHoldings(holding): Observable<any> {
+    return this.http.get('https://api.cryptonator.com/api/ticker/' + holding.crypto + '-' + holding.currency).pipe(
+      timeoutWith(5000, Observable.throw(new Error('Failed to verify holding.')))
+    );
   }
 
 }

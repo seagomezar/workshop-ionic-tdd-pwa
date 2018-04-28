@@ -1,29 +1,44 @@
 import { TestBed, inject, async } from '@angular/core/testing';
+import { HoldingsProvider } from './holdings';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
-import { HoldingsProvider, Holding } from './holdings';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { IonicStorageModule } from '@ionic/storage';
+import { MockBackend } from '@angular/http/testing';
+import { Http, HttpModule, BaseRequestOptions, Response, ResponseOptions } from '@angular/http';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
+
 
 describe('Provider: Holdings Provider', () => {
 
-    const fakeHolding: Holding = {
+    const fakeHolding = {
         crypto: 'BTC',
         currency: 'USD',
         amount: 10,
         value: null
     };
 
-    beforeEach(() => {
+    beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [], // Components to test
+            declarations: [],
             providers: [
-                HoldingsProvider // Providers to test
+                HoldingsProvider,
+                MockBackend,
+                BaseRequestOptions,
+                {
+                    provide: Http,
+                    useFactory: (mockBackend, options) => {
+                        return new Http(mockBackend, options);
+                    },
+                    deps: [MockBackend, BaseRequestOptions]
+                }
             ],
             imports: [
                 HttpClientModule,
-                IonicStorageModule.forRoot()
-            ] // Dependencies we need to test declarations and providers
+                HttpClientTestingModule,
+                IonicStorageModule.forRoot()]
         }).compileComponents();
-    });
+    }));
 
     afterEach(() => {
 
@@ -67,6 +82,34 @@ describe('Provider: Holdings Provider', () => {
         expect(holdingsProvider.holdings[0]).not.toBeNull;
     }));
 
+    it('Debería poder verificar los holdings', inject([HoldingsProvider, MockBackend], (holdingsProvider, mockBackend) => {
+        const mockAnswer = [
+            {
+              ticker: {
+                base: "BTC",
+                target: "USD",
+                price: 443,
+                volume: "31720.1493969300",
+                change: "0.3766203596"
+              },
+              timestamp: 1399490941,
+              success: true,
+              error: ""
+            }
+          ];
+        spyOn(Observable.prototype, "pipe").and.returnValue(
+            Observable.of(mockAnswer)
+          );
 
+        mockBackend.connections.subscribe((connection) => {
+            connection.mockRespond(new Response(new ResponseOptions({
+                body: mockAnswer
+            })));
+        });
+        holdingsProvider.verifyHoldings(fakeHolding).subscribe((response) => {
+            expect(response[0].ticker.price).toBe(443);
+        });
+
+    }));
 
 });
