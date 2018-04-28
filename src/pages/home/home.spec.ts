@@ -48,10 +48,16 @@ describe('Home Page', function() {
         expect(comp.navCtrl.push).toHaveBeenCalledWith('AddHoldingPage');
     });
 
+    it('Debería redirigir a la pagina de cryptonator', () => {
+        spyOn(window, 'open');
+        comp.goToCryptonator();
+        expect(window.open).toHaveBeenCalledWith('https://www.cryptonator.com/api', '_system');
+    });
+
     it('Debería refrescar la lista de holdings', () => {
         spyOn(comp.holdingsProvider, 'fetchPrices');
         comp.refreshPrices({complete: function(){}});
         expect(comp.holdingsProvider.fetchPrices).toHaveBeenCalled();
     });
-    
+
 });

@@ -23,6 +23,10 @@ export class HomePage {
     this.navCtrl.push('AddHoldingPage');
   }
 
+  goToCryptonator(): void {
+    window.open('https://www.cryptonator.com/api', '_system');
+  }
+
   refreshPrices(refresher): void {
     this.holdingsProvider.fetchPrices(refresher);
   }
