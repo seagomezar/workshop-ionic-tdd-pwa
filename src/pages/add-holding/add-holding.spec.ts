@@ -46,5 +46,39 @@ describe('Home Page', function() {
     it('El componente add holding debe crearse', () => {
         expect(comp).toBeDefined();
     });
+    it('Debería llamarse a verify holdings y a addHoldings en el provider', () => {
+        spyOn(comp.holdingsProvider, 'verifyHoldings').and.returnValue(Observable.of({ success: true}));
+        spyOn(comp.holdingsProvider, 'addHolding').and.returnValue(Observable.of({ success: true}));
+        comp.cryptoCode = 'BTC';
+        comp.displayCurrency = 'USD';
+        comp.amountHolding = 10;
+
+        const holding = {
+            crypto: comp.cryptoCode,
+            currency: comp.displayCurrency,
+            amount: comp.amountHolding
+        }
+        comp.addHolding();
+        expect(comp.holdingsProvider.verifyHoldings).toHaveBeenCalledWith(holding);
+        expect(comp.holdingsProvider.addHolding).toHaveBeenCalledWith(holding);
+    });
+
+    it('Debería llamarse a verify holdings y no addHoldings en el provider', () => {
+        spyOn(comp.holdingsProvider, 'verifyHoldings').and.returnValue(Observable.of({ success: false}));
+        spyOn(comp.holdingsProvider, 'addHolding');
+        comp.cryptoCode = 'BTC';
+        comp.displayCurrency = 'USD';
+        comp.amountHolding = 10;
+
+        const holding = {
+            crypto: comp.cryptoCode,
+            currency: comp.displayCurrency,
+            amount: comp.amountHolding
+        };
+        
+        comp.addHolding();
+        expect(comp.holdingsProvider.verifyHoldings).toHaveBeenCalledWith(holding);
+        expect(comp.holdingsProvider.addHolding).not.toHaveBeenCalled();
+    });
 
 });

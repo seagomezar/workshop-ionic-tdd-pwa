@@ -1,12 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-
-/**
- * Generated class for the AddHoldingPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+import { HoldingsProvider } from '../../providers/holdings/holdings';
 
 @IonicPage()
 @Component({
@@ -15,11 +9,48 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class AddHoldingPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  public noConnection: boolean = false;
+  private cryptoUnavailable: boolean = false;
+  private checkingValidity: boolean = false;
+  public cryptoCode: string;
+  public displayCurrency: string;
+  public amountHolding: number;
+  public invalidInput: boolean = false;
+
+  constructor(public navCtrl: NavController, public holdingsProvider: HoldingsProvider) {
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad AddHoldingPage');
+  }
+
+  addHolding(): void {
+    this.invalidInput = false;
+    this.cryptoUnavailable = false;
+    this.noConnection = false;
+    this.checkingValidity = true;
+
+    let holding = {
+      crypto: this.cryptoCode,
+      currency: this.displayCurrency,
+      amount: this.amountHolding || 0
+    };
+
+    this.holdingsProvider.verifyHoldings(holding).subscribe((result) => {
+
+      this.checkingValidity = false;
+
+      if(result.success) {
+        this.holdingsProvider.addHolding(holding);
+        this.navCtrl.pop();
+      } else {
+        this.cryptoUnavailable = true;
+      }
+
+    }, err => {
+      this.noConnection = true;
+      this.checkingValidity = false;
+    });
   }
 
 }
