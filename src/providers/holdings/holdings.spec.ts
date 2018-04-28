@@ -28,4 +28,17 @@ describe('Provider: Holdings Provider', () => {
         expect(holdingsProvider.holdings[0]).toBeUndefined;
     }));
 
+    it('Debería añadir un nuevo holding', inject([HoldingsProvider], (holdingsProvider) => {
+        const fakeHolding: Holding = {
+                crypto: 'BTC',
+                currency: 'USD',
+                amount: 10,
+                value: null
+            };
+
+        expect(holdingsProvider.holdings[0]).toBeUndefined;
+        holdingsProvider.addHolding(fakeHolding);
+        expect(holdingsProvider.holdings[0].crypto).toBe('BTC')
+    }));
+
 });

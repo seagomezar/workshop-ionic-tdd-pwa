@@ -18,4 +18,8 @@ export class HoldingsProvider {
     console.log('Hello HoldingsProvider Provider');
   }
 
+  addHolding(holding: Holding): void {
+    this.holdings.push(holding);
+  }
+
 }
