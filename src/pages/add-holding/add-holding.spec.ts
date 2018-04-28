@@ -96,4 +96,18 @@ describe('Home Page', function() {
         expect(comp.noConnection).toBe(true);
     }); 
 
+    it('Debería retornar verdadero si los campos estas completos', ()=> {
+        comp.cryptoCode = 'BTC';
+        comp.displayCurrency = 'USD';
+        comp.amountHolding = 10;
+        expect(comp.validateInputs()).toBe(true);
+    });
+
+    it('Debería retornar falso si hay un campo vacio', ()=> {
+        comp.cryptoCode = 'BTC';
+        comp.displayCurrency = '';
+        comp.amountHolding = 10;
+        expect(comp.validateInputs()).toBe(false);
+    });
+
 });
