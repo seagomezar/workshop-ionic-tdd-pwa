@@ -10,3 +10,7 @@ Crea una funcion que te permita abrir con window.open la página de cryptonator 
 
 Crea una funcion que te permita validar en add holdings si todos los campos estan completos retorna verdadero de lo contrario retorna falso, debes escribir una prueba unitaria por cada caso.
 
+# Ejercicio 4
+
+Similarmente a addHolding crea edit-holding usando TDD ;)
+
