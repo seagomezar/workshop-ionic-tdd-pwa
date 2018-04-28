@@ -41,4 +41,17 @@ describe('Home Page', function() {
     it('El componente home debe crearse', () => {
         expect(comp).toBeDefined();
     });
+
+    it('Debería redirigir a la pagina de añadir holding', () => {
+        spyOn(comp.navCtrl, 'push');
+        comp.addHolding();
+        expect(comp.navCtrl.push).toHaveBeenCalledWith('AddHoldingPage');
+    });
+
+    it('Debería refrescar la lista de holdings', () => {
+        spyOn(comp.holdingsProvider, 'fetchPrices');
+        comp.refreshPrices({complete: function(){}});
+        expect(comp.holdingsProvider.fetchPrices).toHaveBeenCalled();
+    });
+    
 });
