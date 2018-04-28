@@ -1,6 +1,7 @@
 import { TestBed, inject, async } from '@angular/core/testing';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { HoldingsProvider, Holding } from './holdings';
+import { IonicStorageModule } from '@ionic/storage';
 
 describe('Provider: Holdings Provider', () => {
 
@@ -18,7 +19,8 @@ describe('Provider: Holdings Provider', () => {
                 HoldingsProvider // Providers to test
             ],
             imports: [
-                HttpClientModule
+                HttpClientModule,
+                IonicStorageModule.forRoot()
             ] // Dependencies we need to test declarations and providers
         }).compileComponents();
     });
@@ -54,5 +56,17 @@ describe('Provider: Holdings Provider', () => {
         holdingsProvider.removeHolding(fakeHolding);
         expect(holdingsProvider.holdings[0]).toBeNull;
     }));
+
+    it('Debería poder guardar los holdings en el storage de ionic', inject([HoldingsProvider], (holdingsProvider) => {
+        expect(holdingsProvider.holdings[0]).toBeNull;
+        holdingsProvider.addHolding(fakeHolding);
+        holdingsProvider.saveHoldings();
+        holdingsProvider.removeHolding(fakeHolding);
+        expect(holdingsProvider.holdings[0]).toBeNull;
+        holdingsProvider.loadHoldings();
+        expect(holdingsProvider.holdings[0]).not.toBeNull;
+    }));
+
+
 
 });
