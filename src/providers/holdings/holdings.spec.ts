@@ -1,17 +1,20 @@
 import { TestBed, inject, async } from '@angular/core/testing';
-import { HoldingsProvider } from './holdings';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { HoldingsProvider, Holding } from './holdings';
 
 describe('Provider: Holdings Provider', () => {
 
-    beforeEach(async(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             declarations: [], // Components to test
             providers: [
                 HoldingsProvider // Providers to test
             ],
-            imports: [] // Dependencies we need to test declarations and providers
+            imports: [
+                HttpClientModule
+            ] // Dependencies we need to test declarations and providers
         }).compileComponents();
-    }));
+    });
 
     afterEach(() => {
 
@@ -20,4 +23,9 @@ describe('Provider: Holdings Provider', () => {
     it('El provider debería estar definido', () => {
         expect(HoldingsProvider).toBeDefined();
     });
+
+    it('Inicialmente el store de holdings debería de estar vació', inject([HoldingsProvider], (holdingsProvider) => {
+        expect(holdingsProvider.holdings[0]).toBeUndefined;
+    }));
+
 });
