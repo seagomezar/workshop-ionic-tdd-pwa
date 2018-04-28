@@ -81,4 +81,19 @@ describe('Home Page', function() {
         expect(comp.holdingsProvider.addHolding).not.toHaveBeenCalled();
     });
 
+    it('Debería no estar la connexión disponible', () => {
+        spyOn(comp.holdingsProvider, 'verifyHoldings').and.returnValue(Observable.throw('Error'));
+        comp.cryptoCode = 'BTC';
+        comp.displayCurrency = 'USD';
+        comp.amountHolding = 0;
+
+        const holding = {
+            crypto: comp.cryptoCode,
+            currency: comp.displayCurrency,
+            amount: comp.amountHolding
+        }
+        comp.addHolding();
+        expect(comp.noConnection).toBe(true);
+    }); 
+
 });
