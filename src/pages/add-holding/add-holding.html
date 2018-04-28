@@ -1,0 +1,78 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Add Holding</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <div class="message">
+    <p>Para agregar una conversión, debes proporcionar el símbolo apropiado para la criptomoneda y el símbolo de la moneda en
+      la que deseas mostrar los valores.</p>
+    <p>
+      <strong>Nota:</strong> Los precios listados son estimados. Las tasas pueden variar significativamente entre diferentes intercambios</p>
+
+  </div>
+
+  <ion-list>
+    <ion-item>
+      <ion-label stacked>Input Currency</ion-label>
+      <ion-select [(ngModel)]="cryptoCode" placeholder="Selecciona una Cryptomoneda">
+        <ion-option value="BTC">BitCoin</ion-option>
+        <ion-option value="LTC">LiteCoin</ion-option>
+        <ion-option value="ETH">Ethereum</ion-option>
+        <ion-option value="DOGE">DogeCoin</ion-option>
+        <ion-option value="XRP">Ripple</ion-option>
+        <ion-option value="BCH">Bitcoin cash</ion-option>
+        <ion-option value="NEO">Neo</ion-option>
+        <ion-option value="ADA">Cardano</ion-option>
+        <ion-option value="XLM">Stellar Lumens</ion-option>
+        <ion-option value="EOS">Eos</ion-option>
+        <ion-option value="USD">Dolar</ion-option>
+        <ion-option value="EUR">Euro</ion-option>
+        <ion-option value="CAD">Dolar Canadiense</ion-option>
+        <ion-option value="AUD">Dola Australiano</ion-option>
+        <ion-option value="RUR">Rublo Ruso</ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label stacked>Target Currency</ion-label>
+      <ion-select [(ngModel)]="displayCurrency" placeholder="Selecciona una Moneda">
+        <ion-option value="USD">Dolar</ion-option>
+        <ion-option value="EUR">Euro</ion-option>
+        <ion-option value="CAD">Dolar Canadiense</ion-option>
+        <ion-option value="AUD">Dola Australiano</ion-option>
+        <ion-option value="RUR">Rublo Ruso</ion-option>
+        <ion-option value="BTC">BitCoin</ion-option>
+        <ion-option value="LTC">LiteCoin</ion-option>
+        <ion-option value="ETH">Ethereum</ion-option>
+        <ion-option value="DOGE">DogeCoin</ion-option>
+        <ion-option value="XRP">Ripple</ion-option>
+        <ion-option value="BCH">Bitcoin cash</ion-option>
+        <ion-option value="NEO">Neo</ion-option>
+        <ion-option value="ADA">Cardano</ion-option>
+        <ion-option value="XLM">Stellar Lumens</ion-option>
+        <ion-option value="EOS">Eos</ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label stacked>Cantidad</ion-label>
+      <ion-input [(ngModel)]="amountHolding" type="number"></ion-input>
+    </ion-item>
+  </ion-list>
+
+  <button ion-button full (click)="validateInputs() && addHolding()" [disabled]="checkingValidity" color="secondary">Añadir conversión
+    <ion-spinner color="light" *ngIf="checkingValidity"></ion-spinner>
+  </button>
+  <p class="error-message" *ngIf="invalidInput"> No te olvides llenar todos los campos</p>
+  <p class="error-message" *ngIf="cryptoUnavailable"> Lo sentimos, la combinación que pusiste no se encuentra disponible.</p>
+  <p class="error-message" *ngIf="noConnection"> Lo sentimos, debes de estar conectado a la red para añadir nuevas conversiones.</p>
+</ion-content>
+
+<ion-footer padding>
+  <p>
+    <strong> Nota: </strong> Esta aplicación web te permite rastrear tus conversiones de cryptomonedas sin crear una cuenta. Esto
+    significa que todos los datos se almacenan localmente y pueden eliminarse permanentemente sin previo aviso.</p>
+</ion-footer>
