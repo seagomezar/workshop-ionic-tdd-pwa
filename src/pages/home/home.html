@@ -1,14 +1,49 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>
-      Ionic Blank
-    </ion-title>
+    <ion-title></ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="addHolding()"><ion-icon name="add"></ion-icon></button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
+<ion-content>
+  <h2 text-center><ion-icon name="logo-angular"></ion-icon>AngularWeek Crypto</h2>
+  <div class="message" *ngIf="!holdingsProvider.holdings.length">
+    <p><strong>AngularWeek Crypto</strong> es una <strong>P</strong>rogressive <strong>W</strong>eb <strong>A</strong>pplication que te permite realizar un seguimiento del valor aproximado de criptomonedas</p>
+ 
+        <p>Una PWA es similar a una aplicación proveniente desde las tiendas de aplicaciones, pero tu puedes acceder directamente a través de la web. También puede agregar esta página a tu pantalla de inicio para iniciarla como tus otras aplicaciones.</p>
+ 
+        <p>No se requiere una cuenta, simplemente presione el botón de abajo para comenzar a rastrear sus monedas en la divisa que desees</p>
+ 
+        <button ion-button full (click)="addHolding()" color="secondary">Añadir monedas</button>
+ 
+  </div>
 
-<ion-content padding>
-  The world is your oyster.
-  <p>
-    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.
-  </p>
+  <ion-refresher *ngIf="holdingsProvider.holdings.length" (ionRefresh)="refreshPrices($event)">
+      <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <p class="message" *ngIf="holdingsProvider.pricesUnavailable">No se pudo obtener las tasas. Asegúrese de estar conectado a Internet o intente de nuevo más tarde.</p>
+
+  <ion-list no-lines>
+    <ion-item-sliding *ngFor="let holding of holdingsProvider.holdings">
+      <ion-item class="holding">
+        <p>
+          <img src="/assets/imgs/coin-icons/{{holding.crypto | lowercase}}.png" width="16px" height="16px"/><strong> {{holding.crypto}} <ion-icon ios="ios-swap" md="md-swap"></ion-icon> {{holding.currency}} <img src="/assets/imgs/coin-icons/{{holding.currency | lowercase}}.png" width="16px" height="16px"/> </strong></p>
+        <p class="amount"><strong>Coins: </strong> {{holding.amount}} <strong>Value:</strong> {{holding.value | currency}}</p>
+        <p *ngIf="holding.value > 0" class="value">{{ (holding.amount*holding.value) | currency}}</p>
+
+      </ion-item>
+        <ion-item-options>
+          <button ion-button icon-only color="danger" (click)="holdingsProvider.removeHolding(holding)">
+            <ion-icon name="trash"></ion-icon>
+          </button>
+        </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+
 </ion-content>
+
+<ion-footer padding>
+  <p><strong>Advertencia: </strong> No uses esta aplicación para cosas reales, todo podría estar desactualizado.</p>
+</ion-footer>
