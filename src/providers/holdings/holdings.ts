@@ -6,8 +6,7 @@ import { forkJoin } from 'rxjs/Observable/forkJoin';
 import { timeoutWith } from 'rxjs/operators';
 import 'rxjs/add/observable/throw';
 
-
-export interface Holding {
+interface Holding {
   crypto: string,
   currency: string,
   amount: number,
@@ -17,19 +16,22 @@ export interface Holding {
 @Injectable()
 export class HoldingsProvider {
 
-  holdings: Holding[] = [];
-  pricesUnavailable: boolean = false;
+  public holdings: Holding[] = [];
+  public pricesUnavailable: boolean = false;
 
   constructor(public http: HttpClient, private storage: Storage) {
-    console.log('Hello HoldingsProvider Provider');
   }
 
   addHolding(holding: Holding): void {
     this.holdings.push(holding);
+    this.fetchPrices();
+    this.saveHoldings();
   }
 
   removeHolding(holding): void {
     this.holdings.splice(this.holdings.indexOf(holding), 1);
+    this.fetchPrices();
+    this.saveHoldings();
   }
 
   saveHoldings(): void {
@@ -40,6 +42,7 @@ export class HoldingsProvider {
     this.storage.get('cryptoHoldings').then(holdings => {
       if (holdings !== null) {
         this.holdings = holdings;
+        this.fetchPrices();
       }
     });
   }
@@ -57,7 +60,7 @@ export class HoldingsProvider {
       let request = this.http.get('https://api.cryptonator.com/api/ticker/' + holding.crypto + '-' + holding.currency);
       requests.push(request);
     }
-    // https://www.learnrxjs.io/operators/combination/forkjoin.html
+
     forkJoin(requests).pipe(timeoutWith(5000, Observable.throw(new Error('Failed to fetch prices.')))).subscribe(results => {
       results.forEach((result: any, index) => {
         this.holdings[index].value = result.ticker.price;
