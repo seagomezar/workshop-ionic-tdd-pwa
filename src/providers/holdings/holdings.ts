@@ -22,4 +22,8 @@ export class HoldingsProvider {
     this.holdings.push(holding);
   }
 
+  removeHolding(holding): void {
+    this.holdings.splice(this.holdings.indexOf(holding), 1);
+  }
+
 }

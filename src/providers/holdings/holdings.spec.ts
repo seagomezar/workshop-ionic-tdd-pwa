@@ -47,4 +47,12 @@ describe('Provider: Holdings Provider', () => {
         expect(holdingsProvider.holdings.length).toBe(2);
     }));
 
+    it('Debería poder eliminar un nuevo holding', inject([HoldingsProvider], (holdingsProvider) => {
+        expect(holdingsProvider.holdings[0]).toBeNull;
+        holdingsProvider.addHolding(fakeHolding);
+        expect(holdingsProvider.holdings[0].crypto).toBe('BTC');
+        holdingsProvider.removeHolding(fakeHolding);
+        expect(holdingsProvider.holdings[0]).toBeNull;
+    }));
+
 });
