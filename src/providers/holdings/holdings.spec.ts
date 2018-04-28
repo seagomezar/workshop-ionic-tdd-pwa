@@ -4,6 +4,13 @@ import { HoldingsProvider, Holding } from './holdings';
 
 describe('Provider: Holdings Provider', () => {
 
+    const fakeHolding: Holding = {
+        crypto: 'BTC',
+        currency: 'USD',
+        amount: 10,
+        value: null
+    };
+
     beforeEach(() => {
         TestBed.configureTestingModule({
             declarations: [], // Components to test
@@ -29,16 +36,15 @@ describe('Provider: Holdings Provider', () => {
     }));
 
     it('Debería añadir un nuevo holding', inject([HoldingsProvider], (holdingsProvider) => {
-        const fakeHolding: Holding = {
-                crypto: 'BTC',
-                currency: 'USD',
-                amount: 10,
-                value: null
-            };
-
         expect(holdingsProvider.holdings[0]).toBeUndefined;
         holdingsProvider.addHolding(fakeHolding);
-        expect(holdingsProvider.holdings[0].crypto).toBe('BTC')
+        expect(holdingsProvider.holdings[0].crypto).toBe('BTC');
+    }));
+
+    it('Debería añadir dos holdings y el tamaño del store debería ser dos', inject([HoldingsProvider], (holdingsProvider) => {
+        holdingsProvider.addHolding(fakeHolding);
+        holdingsProvider.addHolding(fakeHolding);
+        expect(holdingsProvider.holdings.length).toBe(2);
     }));
 
 });
