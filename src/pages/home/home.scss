@@ -1,3 +1,31 @@
 page-home {
+    ion-footer {
+        font-size: 0.9em;
+        color: #474747;
+        background-color: map-get($colors, light);
+        strong {
+            color: map-get($colors, danger);;
+        }
+    }
+    ion-item-sliding {
+        margin-top: 10px;
+    }
+    .holding {
+        background-color: #f3f3f3;
+        text-transform: uppercase;
 
+        .amount {
+            font-size: 0.7em;
+        }
+    }
+    .value {
+        margin-top: 10px;
+        font-size: 1.2em;
+        color: map-get($colors, secondary); 
+    }
+    .message {
+        background-color: #f3f3f37a;
+        font-size: 16px;
+        font-family: 'roboto';
+    }
 }
